@@ -11,6 +11,7 @@
 #include <sstream>
 #include <string.h>
 #include <exception>
+#include <cstdio>
 
 // RAII to reset image magick's resource limit
 class LocalResourceLimiter
@@ -427,6 +428,18 @@ void DoConvert(uv_work_t* req) {
         image.colorSpace( context->colorspace );
     }
 
+    
+    if ( context->draw.size() > 0) {
+        if (debug) printf( "draw: %s\n", context->draw.c_str());
+        if ( strstr( context->draw.c_str(), "rectangle" ) !=  NULL ) {
+            int x1,x2,y1,y2;
+            sscanf ( context->draw.c_str(),"rectangle %d,%d %d,%d",&x1,&x2,&y1,&y2 );
+            // Draw a rectangle 
+            if (debug) printf("draw a rectangle: x1:%d, x2:%d, y1:%d, y2:%d\n",x1,x2,y1,y2);
+            image.draw( Magick::DrawableRectangle(x1,x2, y1,y2) );
+        }
+    }
+
     Magick::Blob dstBlob;
     try {
         image.write( &dstBlob );
@@ -593,6 +606,10 @@ NAN_METHOD(Convert) {
       if (context->debug) printf("Parsing colorspace option \"%s\" to %ld\n", *Nan::Utf8String(colorspaceValue), colorspace);
     }
     context->colorspace = colorspace != (-1) ? (Magick::ColorspaceType) colorspace : Magick::UndefinedColorspace;
+
+    Local<Value> drawValue = Nan::Get( obj, Nan::New<String>("draw").ToLocalChecked() ).ToLocalChecked();
+    context->draw = !drawValue->IsUndefined() ?
+        *Nan::Utf8String(drawValue) : "";
 
     uv_work_t* req = new uv_work_t();
     req->data = context;
@@ -1090,16 +1107,17 @@ NAN_METHOD(GetQuantumDepth) {
     info.GetReturnValue().Set(Nan::New<Integer>(MAGICKCORE_QUANTUM_DEPTH));
 }
 
-void init(Local<Object> exports) {
-    Nan::SetMethod(exports, "convert", Convert);
-    Nan::SetMethod(exports, "identify", Identify);
-    Nan::SetMethod(exports, "quantizeColors", QuantizeColors);
-    Nan::SetMethod(exports, "composite", Composite);
-    Nan::SetMethod(exports, "version", Version);
-    Nan::SetMethod(exports, "getConstPixels", GetConstPixels);
-    Nan::SetMethod(exports, "quantumDepth", GetQuantumDepth); // QuantumDepth is already defined
-}
+// void init(Local<Object> exports) {
+//     Nan::SetMethod(exports, "convert", Convert);
+//     Nan::SetMethod(exports, "identify", Identify);
+//     Nan::SetMethod(exports, "quantizeColors", QuantizeColors);
+//     Nan::SetMethod(exports, "composite", Composite);
+//     Nan::SetMethod(exports, "version", Version);
+//     Nan::SetMethod(exports, "getConstPixels", GetConstPixels);
+//     Nan::SetMethod(exports, "quantumDepth", GetQuantumDepth);
+//     IMObject::Init(exports); // QuantumDepth is already defined
+// }
 
 // There is no semi-colon after NODE_MODULE as it's not a function (see node.h).
 // see http://nodejs.org/api/addons.html
-NODE_MODULE(imagemagick, init)
+// NODE_MODULE(imagemagick, init)

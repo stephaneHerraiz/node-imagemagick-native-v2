@@ -55,6 +55,7 @@ struct convert_im_ctx : im_ctx_base {
     int rotate;
     int density;
     int flip;
+    std::string draw;
 
     convert_im_ctx() {}
 };
