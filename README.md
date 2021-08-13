@@ -1,6 +1,6 @@
-# node-imagemagick-native
+# node-imagemagick-native-v2
 
-[ImageMagick](http://www.imagemagick.org/)'s [Magick++](http://www.imagemagick.org/Magick++/) binding for [Node](http://nodejs.org/).
+This a fork of [node-imagemagick-native](https://github.com/elad/node-imagemagick-native). This [Node](http://nodejs.org/) library provide an Object to run [ImageMagick](http://www.imagemagick.org/) multiple conversion function using [Magick++](http://www.imagemagick.org/Magick++/).
 
 Features
 
