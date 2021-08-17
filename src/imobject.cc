@@ -354,7 +354,7 @@ void IMObject::getImage(const Nan::FunctionCallbackInfo<v8::Value>& info) {
         printf("unhandled error");
         return;
     }
-    Local<Value> argv[1] = WrapPointer((char *)dstBlob.data(), dstBlob.length());
+    Local<Value> argv[1] = {WrapPointer((char *)dstBlob.data(), dstBlob.length())};
     Isolate* isolate = info.GetIsolate();
     Local<Function> cb = Local<Function>::Cast(info[0]);
     cb->Call(context, Null(isolate), 1, argv).ToLocalChecked();
