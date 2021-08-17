@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-4](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/compare/v2.0.0-3...v2.0.0-4) (2021-08-17)
+
+
+### Features
+
+* new funtion return buffer ([01f4ac8](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/commit/01f4ac8ac05cf29f00c5d020c758f3a6254c9e7f))
+
+
+### Bug Fixes
+
+* change rotation to rotate function name ([79bdb4b](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/commit/79bdb4b5dcddfc1bcc33f311397d429cabc9bc28))
+
 ## [2.0.0-3](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/compare/v2.0.0-2...v2.0.0-3) (2021-08-17)
 
 
