@@ -2,7 +2,7 @@ const fs = require('fs').promises;
 const Im = require('../src/index');
 
 (async () => {
-    const srcData = await fs.readFile('test/IMG_20181129_130829.jpg');
+    const srcData = await fs.readFile('test/test.jpg');
     const options = {
         srcData: srcData,
         format: 'JPEG',
