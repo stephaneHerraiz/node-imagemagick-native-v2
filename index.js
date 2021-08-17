@@ -15,7 +15,7 @@ class ImageMagick {
         });
     }
 
-    rotation(angle) {
+    rotate(angle) {
         return new Promise((resolve, reject) => {
             this.im.rotate(angle, () => {
                 return resolve();
