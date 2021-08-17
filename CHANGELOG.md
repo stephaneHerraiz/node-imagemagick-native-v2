@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-1](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/compare/v2.0.0-0...v2.0.0-1) (2021-08-17)
+
+
+### Bug Fixes
+
+* remove travis ([1d7b2d9](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/commit/1d7b2d9a8eea17358e8322a8d4ec0b08393318fd))
+
 ## 2.0.0-0 (2021-08-17)
 
 
