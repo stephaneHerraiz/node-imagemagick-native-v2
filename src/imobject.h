@@ -28,11 +28,11 @@ struct Resize_info {
 class IMObject : public Nan::ObjectWrap {
  public:
   static void Init(v8::Local<v8::Object> exports);
-
+  Magick::Image image;
  private:
   explicit IMObject();
   ~IMObject();
-  Magick::Image image;
+  
   convert_im_ctx* context;
 
   static void New(const Nan::FunctionCallbackInfo<v8::Value>& info);

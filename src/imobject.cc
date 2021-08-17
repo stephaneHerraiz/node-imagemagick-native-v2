@@ -1,5 +1,219 @@
 #include "imobject.h"
 
+class ResizeWorker : public Nan::AsyncWorker {
+ public:
+  ResizeWorker(Nan::Callback *callback, Magick::Image *image, Resize_info *resize_info)
+    : Nan::AsyncWorker(callback), image(image), resize_info(resize_info) {}
+  ~ResizeWorker() {}
+
+  void Execute () {
+	// this executes outside node main thread. 
+	// Cannot call any v8 or nan objects and functions here,
+	// but we can run long C functions that would otherwise hold our main Thread
+    std::string error = "";
+    if ( resize_info->width || resize_info->height ) {
+        if ( ! resize_info->width  ) { resize_info->width  = image->columns(); }
+        if ( ! resize_info->height ) { resize_info->height = image->rows();    }
+
+        // do resize
+        if ( strcmp( resize_info->resizeStyle.c_str(), "aspectfill" ) == 0 ) {
+            // ^ : Fill Area Flag ('^' flag)
+            // is not implemented in Magick++
+            // and gravity: center, extent doesnt look like working as exptected
+            // so we do it ourselves
+
+            // keep aspect ratio, get the exact provided size, crop top/bottom or left/right if necessary
+            double aspectratioExpected = (double)resize_info->height / (double)resize_info->width;
+            double aspectratioOriginal = (double)image->rows() / (double)image->columns();
+            unsigned int xoffset = 0;
+            unsigned int yoffset = 0;
+            unsigned int resizewidth;
+            unsigned int resizeheight;
+
+            if ( aspectratioExpected > aspectratioOriginal ) {
+                // expected is taller
+                resizewidth  = (unsigned int)( (double)resize_info->height / (double)image->rows() * (double)image->columns() + 1. );
+                resizeheight = resize_info->height;
+                if ( strstr(resize_info->gravity.c_str(), "West") != NULL ) {
+                    xoffset = 0;
+                }
+                else if ( strstr(resize_info->gravity.c_str(), "East") != NULL ) {
+                    xoffset = (unsigned int)( resizewidth - resize_info->width );
+                }
+                else {
+                    xoffset = (unsigned int)( (resizewidth - resize_info->width) / 2. );
+                }
+                yoffset = 0;
+            }
+            else {
+                // expected is wider
+                resizewidth  = resize_info->width;
+                resizeheight = (unsigned int)( (double)resize_info->width / (double)image->columns() * (double)image->rows() + 1. );
+                xoffset = 0;
+                if ( strstr(resize_info->gravity.c_str(), "North") != NULL ) {
+                    yoffset = 0;
+                }
+                else if ( strstr(resize_info->gravity.c_str(), "South") != NULL ) {
+                    yoffset = (unsigned int)( resizeheight - resize_info->height );
+                }
+                else {
+                    yoffset = (unsigned int)( (resizeheight - resize_info->height) / 2. );
+                }
+            }
+
+            // if (debug) printf( "resize to: %d, %d\n", resizewidth, resizeheight );
+            Magick::Geometry resizeGeometry( resizewidth, resizeheight, 0, 0, 0, 0 );
+            try {
+                image->zoom( resizeGeometry );
+            }
+            catch (std::exception& err) {
+                // std::string message = "image.resize failed with error: ";
+                // message            += err.what();
+                // error = message;
+                return;
+            }
+            catch (...) {
+                error = std::string("unhandled error");
+                return;
+            }
+
+            if ( strcmp ( resize_info->gravity.c_str(), "None" ) != 0 ) {
+                // limit canvas size to cropGeometry
+                // if (debug) printf( "crop to: %d, %d, %d, %d\n", resize_info->width, resize_info->height, resize_info->xoffset, resize_info->yoffset );
+                Magick::Geometry cropGeometry( resize_info->width, resize_info->height, resize_info->xoffset, resize_info->yoffset, 0, 0 );
+
+                Magick::Color transparent( "transparent" );
+                // if ( strcmp( obj->context->format.c_str(), "PNG" ) == 0 ) {
+                //     // make background transparent for PNG
+                //     // JPEG background becomes black if set transparent here
+                //     transparent.alpha( 1. );
+                // }
+
+                #if MagickLibVersion > 0x654
+                    image->extent( cropGeometry, transparent );
+                #else
+                    image->extent( cropGeometry );
+                #endif
+            }
+
+        }
+        else if ( strcmp ( resize_info->resizeStyle.c_str(), "aspectfit" ) == 0 ) {
+            // keep aspect ratio, get the maximum image which fits inside specified size
+            char geometryString[ 32 ];
+            sprintf( geometryString, "%dx%d", resize_info->width, resize_info->height );
+            // if (debug) printf( "resize to: %s\n", geometryString );
+
+            try {
+                image->zoom( geometryString );
+            }
+            catch (std::exception& err) {
+                // std::string message = "image.resize failed with error: ";
+                // message            += err.what();
+                // context->error = message;
+                return;
+            }
+            catch (...) {
+                // context->error = std::string("unhandled error");
+                return;
+            }
+        }
+        else if ( strcmp ( resize_info->resizeStyle.c_str(), "fill" ) == 0 ) {
+            // change aspect ratio and fill specified size
+            char geometryString[ 32 ];
+            sprintf( geometryString, "%dx%d!", resize_info->width, resize_info->height );
+            // if (debug) printf( "resize to: %s\n", geometryString );
+
+            try {
+                image->zoom( geometryString );
+            }
+            catch (std::exception& err) {
+                // std::string message = "image.resize failed with error: ";
+                // message            += err.what();
+                // context->error = message;
+                // return;
+            }
+            catch (...) {
+                // context->error = std::string("unhandled error");
+                return;
+            }
+        }
+         else if ( strcmp ( resize_info->resizeStyle.c_str(), "crop" ) == 0 ) {
+             unsigned int xoffset = resize_info->xoffset;
+             unsigned int yoffset = resize_info->yoffset;
+
+             if ( ! xoffset ) { xoffset = 0; }
+             if ( ! yoffset ) { yoffset = 0; }
+
+             // limit canvas size to cropGeometry
+            //  if (debug) printf( "crop to: %d, %d, %d, %d\n", resize_info->width, resize_info->height, xoffset, yoffset );
+             Magick::Geometry cropGeometry( resize_info->width, resize_info->height, xoffset, yoffset, 0, 0 );
+
+             Magick::Color transparent( "transparent" );
+            //  if ( strcmp( obj->context->format.c_str(), "PNG" ) == 0 ) {
+            //      // make background transparent for PNG
+            //      // JPEG background becomes black if set transparent here
+            //      transparent.alpha( 1. );
+            //  }
+
+             #if MagickLibVersion > 0x654
+                 image->extent( cropGeometry, transparent );
+             #else
+                 image->extent( cropGeometry );
+             #endif
+
+         }
+        else {
+            printf("resizeStyle not supported");
+            return;
+        }
+        // if (debug) printf( "resized to: %d, %d\n", (int)obj->image.columns(), (int)obj->image.rows() );
+    }
+    
+  }
+  
+  // its not necessay to implement this function, 
+  // unless you want a diferent callback function to run,
+  // or pass some response to js
+  //virtual void HandleOKCallback()
+  //{
+  //callback->Call(0, NULL);
+  //}
+
+ private:
+  Magick::Image *image;
+  Resize_info *resize_info;
+};
+
+class RotationWorker : public Nan::AsyncWorker {
+ public:
+  RotationWorker(Nan::Callback *callback, Magick::Image *image, int angle)
+    : Nan::AsyncWorker(callback), image(image), angle(angle) {}
+  ~RotationWorker() {}
+
+  void Execute () {
+	// this executes outside node main thread. 
+	// Cannot call any v8 or nan objects and functions here,
+	// but we can run long C functions that would otherwise hold our main Thread
+    std::string error = "";
+    image->rotate( angle );
+    
+  }
+  
+  // its not necessay to implement this function, 
+  // unless you want a diferent callback function to run,
+  // or pass some response to js
+  //virtual void HandleOKCallback()
+  //{
+  //callback->Call(0, NULL);
+  //}
+
+ private:
+  Magick::Image *image;
+  int angle;
+};
+
+
+
 Nan::Persistent<v8::Function> IMObject::constructor;
 
 IMObject::IMObject() {}
@@ -86,11 +300,11 @@ void IMObject::rotate(const Nan::FunctionCallbackInfo<v8::Value>& info) {
     IMObject* obj = ObjectWrap::Unwrap<IMObject>(info.Holder());
     double angle =
         info[0]->IsUndefined() ? 0 : info[0]->NumberValue(context).FromJust();
-    obj->image.rotate( angle );
+    Nan::Callback *callback = new Nan::Callback(info[1].As<v8::Function>());
+    Nan::AsyncQueueWorker(new RotationWorker(callback, &(obj->image), angle));
 }
 
 void IMObject::resize(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-    std::string error;
     v8::Local<v8::Context> context = info.GetIsolate()->GetCurrentContext();
     IMObject* obj = ObjectWrap::Unwrap<IMObject>(info.Holder());
     
@@ -111,164 +325,12 @@ void IMObject::resize(const Nan::FunctionCallbackInfo<v8::Value>& info) {
     resize_info->resizeStyle = !resizeStyleValue->IsUndefined() ?
         *Nan::Utf8String(resizeStyleValue) : "aspectfill";
 
-    if ( resize_info->width || resize_info->height ) {
-        if ( ! resize_info->width  ) { resize_info->width  = obj->image.columns(); }
-        if ( ! resize_info->height ) { resize_info->height = obj->image.rows();    }
-
-        // do resize
-        if ( strcmp( resize_info->resizeStyle.c_str(), "aspectfill" ) == 0 ) {
-            // ^ : Fill Area Flag ('^' flag)
-            // is not implemented in Magick++
-            // and gravity: center, extent doesnt look like working as exptected
-            // so we do it ourselves
-
-            // keep aspect ratio, get the exact provided size, crop top/bottom or left/right if necessary
-            double aspectratioExpected = (double)resize_info->height / (double)resize_info->width;
-            double aspectratioOriginal = (double)obj->image.rows() / (double)obj->image.columns();
-            unsigned int xoffset = 0;
-            unsigned int yoffset = 0;
-            unsigned int resizewidth;
-            unsigned int resizeheight;
-
-            if ( aspectratioExpected > aspectratioOriginal ) {
-                // expected is taller
-                resizewidth  = (unsigned int)( (double)resize_info->height / (double)obj->image.rows() * (double)obj->image.columns() + 1. );
-                resizeheight = resize_info->height;
-                if ( strstr(resize_info->gravity.c_str(), "West") != NULL ) {
-                    xoffset = 0;
-                }
-                else if ( strstr(resize_info->gravity.c_str(), "East") != NULL ) {
-                    xoffset = (unsigned int)( resizewidth - resize_info->width );
-                }
-                else {
-                    xoffset = (unsigned int)( (resizewidth - resize_info->width) / 2. );
-                }
-                yoffset = 0;
-            }
-            else {
-                // expected is wider
-                resizewidth  = resize_info->width;
-                resizeheight = (unsigned int)( (double)resize_info->width / (double)obj->image.columns() * (double)obj->image.rows() + 1. );
-                xoffset = 0;
-                if ( strstr(resize_info->gravity.c_str(), "North") != NULL ) {
-                    yoffset = 0;
-                }
-                else if ( strstr(resize_info->gravity.c_str(), "South") != NULL ) {
-                    yoffset = (unsigned int)( resizeheight - resize_info->height );
-                }
-                else {
-                    yoffset = (unsigned int)( (resizeheight - resize_info->height) / 2. );
-                }
-            }
-
-            // if (debug) printf( "resize to: %d, %d\n", resizewidth, resizeheight );
-            Magick::Geometry resizeGeometry( resizewidth, resizeheight, 0, 0, 0, 0 );
-            try {
-                obj->image.zoom( resizeGeometry );
-            }
-            catch (std::exception& err) {
-                // std::string message = "image.resize failed with error: ";
-                // message            += err.what();
-                // error = message;
-                return;
-            }
-            catch (...) {
-                error = std::string("unhandled error");
-                return;
-            }
-
-            if ( strcmp ( resize_info->gravity.c_str(), "None" ) != 0 ) {
-                // limit canvas size to cropGeometry
-                // if (debug) printf( "crop to: %d, %d, %d, %d\n", resize_info->width, resize_info->height, resize_info->xoffset, resize_info->yoffset );
-                Magick::Geometry cropGeometry( resize_info->width, resize_info->height, resize_info->xoffset, resize_info->yoffset, 0, 0 );
-
-                Magick::Color transparent( "transparent" );
-                if ( strcmp( obj->context->format.c_str(), "PNG" ) == 0 ) {
-                    // make background transparent for PNG
-                    // JPEG background becomes black if set transparent here
-                    transparent.alpha( 1. );
-                }
-
-                #if MagickLibVersion > 0x654
-                    obj->image.extent( cropGeometry, transparent );
-                #else
-                    obj->image.extent( cropGeometry );
-                #endif
-            }
-
-        }
-        else if ( strcmp ( resize_info->resizeStyle.c_str(), "aspectfit" ) == 0 ) {
-            // keep aspect ratio, get the maximum image which fits inside specified size
-            char geometryString[ 32 ];
-            sprintf( geometryString, "%dx%d", resize_info->width, resize_info->height );
-            // if (debug) printf( "resize to: %s\n", geometryString );
-
-            try {
-                obj->image.zoom( geometryString );
-            }
-            catch (std::exception& err) {
-                // std::string message = "image.resize failed with error: ";
-                // message            += err.what();
-                // context->error = message;
-                return;
-            }
-            catch (...) {
-                // context->error = std::string("unhandled error");
-                return;
-            }
-        }
-        else if ( strcmp ( resize_info->resizeStyle.c_str(), "fill" ) == 0 ) {
-            // change aspect ratio and fill specified size
-            char geometryString[ 32 ];
-            sprintf( geometryString, "%dx%d!", resize_info->width, resize_info->height );
-            // if (debug) printf( "resize to: %s\n", geometryString );
-
-            try {
-                obj->image.zoom( geometryString );
-            }
-            catch (std::exception& err) {
-                // std::string message = "image.resize failed with error: ";
-                // message            += err.what();
-                // context->error = message;
-                // return;
-            }
-            catch (...) {
-                // context->error = std::string("unhandled error");
-                return;
-            }
-        }
-         else if ( strcmp ( resize_info->resizeStyle.c_str(), "crop" ) == 0 ) {
-             unsigned int xoffset = resize_info->xoffset;
-             unsigned int yoffset = resize_info->yoffset;
-
-             if ( ! xoffset ) { xoffset = 0; }
-             if ( ! yoffset ) { yoffset = 0; }
-
-             // limit canvas size to cropGeometry
-            //  if (debug) printf( "crop to: %d, %d, %d, %d\n", resize_info->width, resize_info->height, xoffset, yoffset );
-             Magick::Geometry cropGeometry( resize_info->width, resize_info->height, xoffset, yoffset, 0, 0 );
-
-             Magick::Color transparent( "transparent" );
-             if ( strcmp( obj->context->format.c_str(), "PNG" ) == 0 ) {
-                 // make background transparent for PNG
-                 // JPEG background becomes black if set transparent here
-                 transparent.alpha( 1. );
-             }
-
-             #if MagickLibVersion > 0x654
-                 obj->image.extent( cropGeometry, transparent );
-             #else
-                 obj->image.extent( cropGeometry );
-             #endif
-
-         }
-        else {
-            printf("resizeStyle not supported");
-            return;
-        }
-        // if (debug) printf( "resized to: %d, %d\n", (int)obj->image.columns(), (int)obj->image.rows() );
-    }
-
+    Nan::Callback *callback = new Nan::Callback(info[1].As<v8::Function>());
+    Nan::AsyncQueueWorker(new ResizeWorker(callback, &(obj->image), resize_info));
+    // Isolate* isolate = info.GetIsolate();
+    // Local<Function> cb = Local<Function>::Cast(info[1]);
+    // Local<Value> argv[1] = Nan::New<String>(error.c_str()).ToLocalChecked();
+    // cb->Call(context, Null(isolate), 1, argv).ToLocalChecked();
 }
 
 void IMObject::baseColumns(const Nan::FunctionCallbackInfo<v8::Value>& info) {
@@ -278,6 +340,7 @@ void IMObject::baseColumns(const Nan::FunctionCallbackInfo<v8::Value>& info) {
 }
 
 void IMObject::getImage(const Nan::FunctionCallbackInfo<v8::Value>& info) {
+    v8::Local<v8::Context> context = info.GetIsolate()->GetCurrentContext();
     IMObject* obj = ObjectWrap::Unwrap<IMObject>(info.Holder());
     Magick::Blob dstBlob;
     try {
@@ -291,7 +354,11 @@ void IMObject::getImage(const Nan::FunctionCallbackInfo<v8::Value>& info) {
         printf("unhandled error");
         return;
     }
-    info.GetReturnValue().Set(WrapPointer((char *)dstBlob.data(), dstBlob.length()) );
+    Local<Value> argv[1] = WrapPointer((char *)dstBlob.data(), dstBlob.length());
+    Isolate* isolate = info.GetIsolate();
+    Local<Function> cb = Local<Function>::Cast(info[0]);
+    cb->Call(context, Null(isolate), 1, argv).ToLocalChecked();
+    // info.GetReturnValue().Set(WrapPointer((char *)dstBlob.data(), dstBlob.length()) );
 }
 
 // void IMObject::Multiply(const Nan::FunctionCallbackInfo<v8::Value>& info) {
