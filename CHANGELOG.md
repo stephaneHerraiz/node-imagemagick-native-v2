@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-2](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/compare/v2.0.0-1...v2.0.0-2) (2021-08-17)
+
+
+### Bug Fixes
+
+* error buid on array init ([f97f99b](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/commit/f97f99b26de23e208a47e48be68e62ee3e67f70f))
+* test ([0a94ba0](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/commit/0a94ba0ba1a00c48fc178f2f4f0b929af41d49fe))
+
 ## [2.0.0-1](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/compare/v2.0.0-0...v2.0.0-1) (2021-08-17)
 
 
