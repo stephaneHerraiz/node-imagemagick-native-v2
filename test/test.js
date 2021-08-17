@@ -1,5 +1,5 @@
 const fs = require('fs').promises;
-const Im = require('../src/index');
+const Im = require('../index');
 
 (async () => {
     const srcData = await fs.readFile('test/test.jpg');
