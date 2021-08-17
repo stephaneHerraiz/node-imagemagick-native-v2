@@ -23,7 +23,7 @@ class ImageMagick {
         });
     }
 
-    getImage(path) {
+    getImageFile(path) {
         return new Promise((resolve, reject) => {
             this.im.getImage((buf) => {
                 fs.writeFile(path,buf, (err) => {
@@ -33,6 +33,13 @@ class ImageMagick {
                         return resolve();
                     }
                 });
+            });
+        });
+    }
+    getImage() {
+        return new Promise((resolve, reject) => {
+            this.im.getImage((buf) => {
+                resolve(buf);
             });
         });
     }
