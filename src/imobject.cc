@@ -26,8 +26,8 @@ class ResizeWorker : public Nan::AsyncWorker {
             // keep aspect ratio, get the exact provided size, crop top/bottom or left/right if necessary
             double aspectratioExpected = (double)resize_info->height / (double)resize_info->width;
             double aspectratioOriginal = (double)image->rows() / (double)image->columns();
-            unsigned int xoffset = 0;
-            unsigned int yoffset = 0;
+            // unsigned int xoffset = 0;
+            // unsigned int yoffset = 0;
             unsigned int resizewidth;
             unsigned int resizeheight;
 
@@ -35,31 +35,31 @@ class ResizeWorker : public Nan::AsyncWorker {
                 // expected is taller
                 resizewidth  = (unsigned int)( (double)resize_info->height / (double)image->rows() * (double)image->columns() + 1. );
                 resizeheight = resize_info->height;
-                if ( strstr(resize_info->gravity.c_str(), "West") != NULL ) {
-                    xoffset = 0;
-                }
-                else if ( strstr(resize_info->gravity.c_str(), "East") != NULL ) {
-                    xoffset = (unsigned int)( resizewidth - resize_info->width );
-                }
-                else {
-                    xoffset = (unsigned int)( (resizewidth - resize_info->width) / 2. );
-                }
-                yoffset = 0;
+                // if ( strstr(resize_info->gravity.c_str(), "West") != NULL ) {
+                //     xoffset = 0;
+                // }
+                // else if ( strstr(resize_info->gravity.c_str(), "East") != NULL ) {
+                //     xoffset = (unsigned int)( resizewidth - resize_info->width );
+                // }
+                // else {
+                //     xoffset = (unsigned int)( (resizewidth - resize_info->width) / 2. );
+                // }
+                // yoffset = 0;
             }
             else {
                 // expected is wider
                 resizewidth  = resize_info->width;
                 resizeheight = (unsigned int)( (double)resize_info->width / (double)image->columns() * (double)image->rows() + 1. );
-                xoffset = 0;
-                if ( strstr(resize_info->gravity.c_str(), "North") != NULL ) {
-                    yoffset = 0;
-                }
-                else if ( strstr(resize_info->gravity.c_str(), "South") != NULL ) {
-                    yoffset = (unsigned int)( resizeheight - resize_info->height );
-                }
-                else {
-                    yoffset = (unsigned int)( (resizeheight - resize_info->height) / 2. );
-                }
+                // xoffset = 0;
+                // if ( strstr(resize_info->gravity.c_str(), "North") != NULL ) {
+                //     yoffset = 0;
+                // }
+                // else if ( strstr(resize_info->gravity.c_str(), "South") != NULL ) {
+                //     yoffset = (unsigned int)( resizeheight - resize_info->height );
+                // }
+                // else {
+                //     yoffset = (unsigned int)( (resizeheight - resize_info->height) / 2. );
+                // }
             }
 
             // if (debug) printf( "resize to: %d, %d\n", resizewidth, resizeheight );
@@ -213,8 +213,6 @@ class RotationWorker : public Nan::AsyncWorker {
   int angle;
 };
 
-
-
 Nan::Persistent<v8::Function> IMObject::constructor;
 
 IMObject::IMObject() {}
@@ -307,7 +305,6 @@ void IMObject::rotate(const Nan::FunctionCallbackInfo<v8::Value>& info) {
 }
 
 void IMObject::resize(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-    v8::Local<v8::Context> context = info.GetIsolate()->GetCurrentContext();
     IMObject* obj = ObjectWrap::Unwrap<IMObject>(info.Holder());
     
     Resize_info* resize_info = new Resize_info();
