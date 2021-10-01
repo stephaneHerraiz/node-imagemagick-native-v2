@@ -24,6 +24,7 @@
       "sources": [ 
         "src/imagemagick.cc",
         "src/imobject.cc",
+        "src/drawRectangle.cc",
         "src/drawText.cc",
         "src/stroke.cc"
       ],
