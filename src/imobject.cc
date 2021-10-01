@@ -1,5 +1,6 @@
 #include "imobject.h"
 #include "drawRectangle.h"
+#include "drawCircle.h"
 #include "drawText.h"
 
 class ResizeWorker : public Nan::AsyncWorker {
@@ -236,6 +237,7 @@ void IMObject::Init(v8::Local<v8::Object> exports) {
     Nan::SetPrototypeMethod(tpl, "getImage", getImage);
     Nan::SetPrototypeMethod(tpl, "baseColumns", baseColumns);
     Nan::SetPrototypeMethod(tpl, "drawRectangle", drawRectangle);
+    Nan::SetPrototypeMethod(tpl, "drawCircle", drawCircle);
     Nan::SetPrototypeMethod(tpl, "drawText", drawText);
 
     constructor.Reset(tpl->GetFunction(context).ToLocalChecked());
@@ -376,6 +378,22 @@ void IMObject::drawRectangle(const Nan::FunctionCallbackInfo<v8::Value>& info) {
 
     Nan::Callback *callback = new Nan::Callback(info[5].As<v8::Function>());
     Nan::AsyncQueueWorker(new DrawRectangleWorker(callback, &(obj->image), upperLeftX, upperLeftY, lowerRightX, lowerRightY, options));
+}
+
+void IMObject::drawCircle(const Nan::FunctionCallbackInfo<v8::Value>& info) {
+    v8::Isolate* isolate = info.GetIsolate();
+    v8::Local<v8::Context> context = info.GetIsolate()->GetCurrentContext();
+    IMObject* obj = ObjectWrap::Unwrap<IMObject>(info.Holder());
+
+    double x = info[0]->NumberValue(context).FromJust();
+    double y = info[1]->NumberValue(context).FromJust();
+    double perimX = info[2]->NumberValue(context).FromJust();
+    double perimY = info[3]->NumberValue(context).FromJust();
+    
+    DrawCircleOptions* options = DrawCircleWorker::castOptions(Local<Object>::Cast( info[ 4 ] ), isolate);
+
+    Nan::Callback *callback = new Nan::Callback(info[5].As<v8::Function>());
+    Nan::AsyncQueueWorker(new DrawCircleWorker(callback, &(obj->image), x, y, perimX, perimY, options));
 }
 
 void IMObject::drawText(const Nan::FunctionCallbackInfo<v8::Value>& info) {

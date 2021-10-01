@@ -31,6 +31,14 @@ class ImageMagick {
         });
     }
 
+    drawCircle(x, y, perimX, perimY, options) {
+        return new Promise((resolve, reject) => {
+            this.im.drawCircle(x, y, perimX, perimY, options, () => {
+                return resolve();
+            });
+        });
+    }
+
     drawText(x, y, text, options = {}) {
         return new Promise((resolve, reject) => {
             this.im.drawText(x, y, text, options, () => {
