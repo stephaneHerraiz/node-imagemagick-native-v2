@@ -23,7 +23,15 @@ class ImageMagick {
         });
     }
 
-    drawText(x, y, text, options) {
+    drawRectangle(upperLeftX, upperLeftY, lowerRightX, lowerRightY, options) {
+        return new Promise((resolve, reject) => {
+            this.im.drawRectangle(upperLeftX, upperLeftY, lowerRightX, lowerRightY, options, () => {
+                return resolve();
+            });
+        });
+    }
+
+    drawText(x, y, text, options = {}) {
         return new Promise((resolve, reject) => {
             this.im.drawText(x, y, text, options, () => {
                 return resolve();
