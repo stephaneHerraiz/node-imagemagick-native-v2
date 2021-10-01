@@ -42,6 +42,7 @@ class IMObject : public Nan::ObjectWrap {
   static void resize(const Nan::FunctionCallbackInfo<v8::Value>& info);
   static void getImage(const Nan::FunctionCallbackInfo<v8::Value>& info);
   static void baseColumns(const Nan::FunctionCallbackInfo<v8::Value>& info);
+  static void drawRectangle(const Nan::FunctionCallbackInfo<v8::Value>& info);
   static void drawText(const Nan::FunctionCallbackInfo<v8::Value>& info);
   static Nan::Persistent<v8::Function> constructor;
 };

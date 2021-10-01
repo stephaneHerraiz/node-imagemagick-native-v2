@@ -1,4 +1,5 @@
 #include "imobject.h"
+#include "drawRectangle.h"
 #include "drawText.h"
 
 class ResizeWorker : public Nan::AsyncWorker {
@@ -234,6 +235,7 @@ void IMObject::Init(v8::Local<v8::Object> exports) {
     Nan::SetPrototypeMethod(tpl, "rotate", rotate);
     Nan::SetPrototypeMethod(tpl, "getImage", getImage);
     Nan::SetPrototypeMethod(tpl, "baseColumns", baseColumns);
+    Nan::SetPrototypeMethod(tpl, "drawRectangle", drawRectangle);
     Nan::SetPrototypeMethod(tpl, "drawText", drawText);
 
     constructor.Reset(tpl->GetFunction(context).ToLocalChecked());
@@ -360,6 +362,21 @@ void IMObject::getImage(const Nan::FunctionCallbackInfo<v8::Value>& info) {
     // info.GetReturnValue().Set(WrapPointer((char *)dstBlob.data(), dstBlob.length()) );
 }
 
+void IMObject::drawRectangle(const Nan::FunctionCallbackInfo<v8::Value>& info) {
+    v8::Isolate* isolate = info.GetIsolate();
+    v8::Local<v8::Context> context = info.GetIsolate()->GetCurrentContext();
+    IMObject* obj = ObjectWrap::Unwrap<IMObject>(info.Holder());
+
+    double upperLeftX = info[0]->NumberValue(context).FromJust();
+    double upperLeftY = info[1]->NumberValue(context).FromJust();
+    double lowerRightX = info[2]->NumberValue(context).FromJust();
+    double lowerRightY = info[3]->NumberValue(context).FromJust();
+    
+    DrawRectangleOptions* options = DrawRectangleWorker::castOptions(Local<Object>::Cast( info[ 4 ] ), isolate);
+
+    Nan::Callback *callback = new Nan::Callback(info[5].As<v8::Function>());
+    Nan::AsyncQueueWorker(new DrawRectangleWorker(callback, &(obj->image), upperLeftX, upperLeftY, lowerRightX, lowerRightY, options));
+}
 
 void IMObject::drawText(const Nan::FunctionCallbackInfo<v8::Value>& info) {
     v8::Local<v8::Context> context = info.GetIsolate()->GetCurrentContext();
