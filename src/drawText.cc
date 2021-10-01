@@ -17,7 +17,7 @@ void DrawTextWorker::Execute () {
         drawList.push_back(Magick::DrawableStrokeOpacity(options_->stroke->opacity));
         drawList.push_back(Magick::DrawableStrokeWidth(options_->stroke->width)); // Stroke width
     }
-    if(options_->font->size >= 0) {
+    if(options_->font->size > 0) {
         drawList.push_back(Magick::DrawablePointSize(options_->font->size));
     }
     drawList.push_back(Magick::DrawableFillColor(options_->color)); // Fill color
