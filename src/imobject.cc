@@ -1,4 +1,5 @@
 #include "imobject.h"
+#include "drawText.h"
 
 class ResizeWorker : public Nan::AsyncWorker {
  public:
@@ -221,25 +222,26 @@ IMObject::IMObject() {}
 IMObject::~IMObject() {}
 
 void IMObject::Init(v8::Local<v8::Object> exports) {
-  v8::Local<v8::Context> context = exports->CreationContext();
-  Nan::HandleScope scope;
+    v8::Local<v8::Context> context = exports->CreationContext();
+    Nan::HandleScope scope;
 
-  // Prepare constructor template
-  v8::Local<v8::FunctionTemplate> tpl = Nan::New<v8::FunctionTemplate>(New);
-  tpl->SetClassName(Nan::New("IMObject").ToLocalChecked());
-  tpl->InstanceTemplate()->SetInternalFieldCount(2);
+    // Prepare constructor template
+    v8::Local<v8::FunctionTemplate> tpl = Nan::New<v8::FunctionTemplate>(New);
+    tpl->SetClassName(Nan::New("IMObject").ToLocalChecked());
+    tpl->InstanceTemplate()->SetInternalFieldCount(2);
 
-  // Prototype
-  Nan::SetPrototypeMethod(tpl, "resize", resize);
-  Nan::SetPrototypeMethod(tpl, "length", Getlen);
-  Nan::SetPrototypeMethod(tpl, "rotate", rotate);
-  Nan::SetPrototypeMethod(tpl, "getImage", getImage);
-  Nan::SetPrototypeMethod(tpl, "baseColumns", baseColumns);
+    // Prototype
+    Nan::SetPrototypeMethod(tpl, "resize", resize);
+    Nan::SetPrototypeMethod(tpl, "length", Getlen);
+    Nan::SetPrototypeMethod(tpl, "rotate", rotate);
+    Nan::SetPrototypeMethod(tpl, "getImage", getImage);
+    Nan::SetPrototypeMethod(tpl, "baseColumns", baseColumns);
+    Nan::SetPrototypeMethod(tpl, "drawText", drawText);
 
-  constructor.Reset(tpl->GetFunction(context).ToLocalChecked());
-  exports->Set(context,
-               Nan::New("IMObject").ToLocalChecked(),
-               tpl->GetFunction(context).ToLocalChecked());
+    constructor.Reset(tpl->GetFunction(context).ToLocalChecked());
+    exports->Set(context,
+                Nan::New("IMObject").ToLocalChecked(),
+                tpl->GetFunction(context).ToLocalChecked());
 }
 
 void IMObject::New(const Nan::FunctionCallbackInfo<v8::Value>& info) {
@@ -360,6 +362,28 @@ void IMObject::getImage(const Nan::FunctionCallbackInfo<v8::Value>& info) {
     cb->Call(context, Null(isolate), 1, argv).ToLocalChecked();
     // info.GetReturnValue().Set(WrapPointer((char *)dstBlob.data(), dstBlob.length()) );
 }
+
+
+void IMObject::drawText(const Nan::FunctionCallbackInfo<v8::Value>& info) {
+    v8::Local<v8::Context> context = info.GetIsolate()->GetCurrentContext();
+    v8::Isolate* isolate = info.GetIsolate();
+
+    IMObject* obj = ObjectWrap::Unwrap<IMObject>(info.Holder());
+
+    double x = info[0]->NumberValue(context).FromJust();
+    double y = info[1]->NumberValue(context).FromJust();
+
+    v8::String::Utf8Value v8_text(isolate, info[2]->ToString());
+    std::string text(*v8_text);
+
+    DrawTextOptions* options = DrawTextWorker::castOptions(Local<Object>::Cast( info[ 3 ] ), isolate);
+    
+    printf( "fonts:%s %f\n",  options->font->family.c_str(), options->font->size);
+    Nan::Callback *callback = new Nan::Callback(info[4].As<v8::Function>());
+    Nan::AsyncQueueWorker(new DrawTextWorker(callback, &(obj->image), x, y, text, options));
+}
+
+
 
 // void IMObject::Multiply(const Nan::FunctionCallbackInfo<v8::Value>& info) {
 //   v8::Local<v8::Context> context = info.GetIsolate()->GetCurrentContext();

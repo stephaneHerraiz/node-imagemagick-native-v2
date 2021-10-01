@@ -21,7 +21,12 @@
   "targets": [
     {
       "target_name": "imagemagick",
-      "sources": [ "src/imagemagick.cc", "src/imobject.cc" ],
+      "sources": [ 
+        "src/imagemagick.cc",
+        "src/imobject.cc",
+        "src/drawText.cc",
+        "src/stroke.cc"
+      ],
       'cflags!': [ '-fno-exceptions' ],
       'cflags_cc!': [ '-fno-exceptions' ],
       "include_dirs" : [
