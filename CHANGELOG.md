@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-5](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/compare/v2.0.0-4...v2.0.0-5) (2021-10-11)
+
+
+### Features
+
+* **drawcircle:** add draw circle ([32891a6](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/commit/32891a658e5eb1af8496feee03fc60eccdc0c760))
+* **drawrectangle:** add rectangle drawing  ([af8dba6](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/commit/af8dba62480052c1951cc01b5c5ee51425db9c3f))
+* **drawRectangle:** add to JS ([a76c5d8](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/commit/a76c5d826be9c9a2c5b31a3177631e2869fa2eae))
+* **drawtext:** add drawing text ([1bcb002](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/commit/1bcb0028723394a93a7653a3511e3d00034b1e76))
+* migration to typescript ([5c26fae](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/commit/5c26fae40dbb0710b0ceecfa6aded84984ca3807))
+* **stroke:** add stroke cast function ([a730a2d](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/commit/a730a2d255a880088685ecac693eeb5594a58c0f))
+
+
+### Bug Fixes
+
+* **build:** cleaning warnings ([c31f4bd](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/commit/c31f4bd774af7a93faedf799f3e5e6ce9dd56e91))
+* **dratext:** if size =0 => default size ([1d41aaa](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/commit/1d41aaaeaec1f4bcabf4d9d43aa1562781ab8a21))
+* **drawrectangle:** add file to compilation ([c37eba8](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/commit/c37eba889d7e953003cef0a8dc9ec16244c5ada6))
+
 ## [2.0.0-4](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/compare/v2.0.0-3...v2.0.0-4) (2021-08-17)
 
 
