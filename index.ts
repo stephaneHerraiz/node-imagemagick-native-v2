@@ -1,0 +1,98 @@
+const fs = require('fs');
+const im = require('./build/Release/imagemagick.node');
+
+interface Options {
+    srcData: Buffer,
+    threadResource?: number
+}
+
+interface TextOptions {
+    color?: string,
+    font?: {
+        family: string,
+        size: number
+    },
+    stroke?: Stroke
+}
+
+interface DrawOptions {
+    color?: string,
+    stroke?: Stroke
+}
+
+interface Stroke {
+    color: string,
+    width: number,
+    opacity: number
+}
+
+class ImageMagick {
+    private im: any;
+
+    constructor(options: Options) {
+        this.im = new im.IMObject(options);
+    }
+
+    resize(options):Promise<void>  {
+        return new Promise((resolve, reject) => {
+            this.im.resize(options, () => {
+                return resolve();
+            });
+        });
+    }
+
+    rotate(angle: number):Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.im.rotate(angle, () => {
+                return resolve();
+            });
+        });
+    }
+
+    drawRectangle(upperLeftX: number, upperLeftY: number
+        , lowerRightX: number, lowerRightY: number, options: DrawOptions):Promise<void>  {
+        return new Promise((resolve, reject) => {
+            this.im.drawRectangle(upperLeftX, upperLeftY, lowerRightX, lowerRightY, options, () => {
+                return resolve();
+            });
+        });
+    }
+
+    drawCircle(x: number, y: number, perimX: number, perimY: number, options: DrawOptions):Promise<void>  {
+        return new Promise((resolve, reject) => {
+            this.im.drawCircle(x, y, perimX, perimY, options, () => {
+                return resolve();
+            });
+        });
+    }
+
+    drawText(x: number, y: number, text, options: TextOptions = {}):Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.im.drawText(x, y, text, options, () => {
+                return resolve();
+            });
+        });
+    }
+
+    getImageFile(path: string):Promise<void>  {
+        return new Promise((resolve, reject) => {
+            this.im.getImage((buf) => {
+                fs.writeFile(path,buf, (err) => {
+                    if (err) {
+                        return reject(err);
+                    } else {
+                        return resolve();
+                    }
+                });
+            });
+        });
+    }
+    getImage():Promise<Buffer> {
+        return new Promise((resolve, reject) => {
+            this.im.getImage((buf) => {
+                resolve(buf);
+            });
+        });
+    }
+
+}
