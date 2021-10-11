@@ -34,7 +34,6 @@ StrokeOptions* castStrokeOPtions (Local<Object> options_, Isolate* isolate_) {
     } else {
       options->lineJoin = Magick::MiterJoin;
     }
-    printf("lineJoin:%d;\n",options->lineJoin);
     Local<Value> width = Nan::Get( options_, Nan::New<String>("width").ToLocalChecked() ).ToLocalChecked();
     options->width = width->NumberValue(context).FromJust();
 

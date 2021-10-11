@@ -410,28 +410,9 @@ void IMObject::drawText(const Nan::FunctionCallbackInfo<v8::Value>& info) {
 
     DrawTextOptions* options = DrawTextWorker::castOptions(Local<Object>::Cast( info[ 3 ] ), isolate);
     
-    printf( "fonts:%s %f\n",  options->font->family.c_str(), options->font->size);
     Nan::Callback *callback = new Nan::Callback(info[4].As<v8::Function>());
     Nan::AsyncQueueWorker(new DrawTextWorker(callback, &(obj->image), x, y, text, options));
 }
-
-
-
-// void IMObject::Multiply(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-//   v8::Local<v8::Context> context = info.GetIsolate()->GetCurrentContext();
-//   IMObject* obj = ObjectWrap::Unwrap<IMObject>(info.Holder());
-//   double multiple =
-//       info[0]->IsUndefined() ? 1 : info[0]->NumberValue(context).FromJust();
-
-//   v8::Local<v8::Function> cons = Nan::New<v8::Function>(constructor);
-
-//   const int argc = 1;
-//   v8::Local<v8::Value> argv[argc] = {Nan::New(obj->value_ * multiple)};
-
-//   info.GetReturnValue().Set(
-//       cons->NewInstance(context, argc, argv).ToLocalChecked());
-// }
-
 
 void init(Local<Object> exports) {
     IMObject::Init(exports); // QuantumDepth is already defined
