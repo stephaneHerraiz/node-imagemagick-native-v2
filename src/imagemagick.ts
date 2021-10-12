@@ -1,12 +1,11 @@
 const fs = require('fs');
-const im = require('./build/Release/imagemagick.node');
-
-interface Options {
+const im = require('./Release/imagemagick.node');
+export interface Options {
     srcData: Buffer,
     threadResource?: number
 }
 
-interface TextOptions {
+export interface TextOptions {
     color?: string,
     font?: {
         family: string,
@@ -15,18 +14,18 @@ interface TextOptions {
     stroke?: Stroke
 }
 
-interface DrawOptions {
+export interface DrawOptions {
     color?: string,
     stroke?: Stroke
 }
 
-interface Stroke {
+export interface Stroke {
     color: string,
     width: number,
     opacity: number
 }
 
-class ImageMagick {
+export class ImageMagick {
     private im: any;
 
     constructor(options: Options) {

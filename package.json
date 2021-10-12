@@ -15,14 +15,17 @@
   },
   "author": "Stéphane Herraiz <stephane.herraiz@gmail.com>",
   "contributors": [],
+  "files": [
+    "dist/**"
+  ],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
     "test": "tap test/test*.js",
     "build-lib": "node-gyp rebuild",
     "debug": "npm run clean && tsc --watch",
-    "build": "npm run clean && tsc",
-    "copy-files": "copyfiles -f ./src/template/* ./dist/template",
+    "build": "npm run clean && npm run build-lib && tsc && npm run copy-lib",
+    "copy-lib": "copyfiles -f ./build/Release/* ./dist/Release",
     "clean": "rimraf dist/",
     "release": "standard-version"
   },
@@ -35,6 +38,7 @@
   },
   "devDependencies": {
     "@types/node": "^16.10.3",
+    "copyfiles": "^2.4.1",
     "rimraf": "^3.0.2",
     "standard-version": "^9.3.1",
     "tap": "*"

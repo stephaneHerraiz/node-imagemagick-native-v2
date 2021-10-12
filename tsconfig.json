@@ -8,14 +8,8 @@
     "target": "es2017",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "/",
-    "incremental": true,
     "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "paths": {
-      "@imagemagick/*": ["build/Release/*"],
-    },
-    "skipLibCheck": true
+    "esModuleInterop": true
   },
-  "exclude": ["node_modules", "dist"]
+  "exclude": ["node_modules", "./test/**/*", "dist", "**/*spec.ts"]
 }
