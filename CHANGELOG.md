@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-7](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/compare/v2.0.0-6...v2.0.0-7) (2021-11-18)
+
+
+### Bug Fixes
+
+* **getimage:** set the output image format ([243f8c8](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/commit/243f8c8d876a36c1f2cac23ec7197473207bc30c))
+
 ## [2.0.0-6](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/compare/v2.0.0-5...v2.0.0-6) (2021-10-12)
 
 
