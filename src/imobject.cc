@@ -342,18 +342,22 @@ void IMObject::baseColumns(const Nan::FunctionCallbackInfo<v8::Value>& info) {
     info.GetReturnValue().Set(Nan::New(col));
 }
 
-void IMObject::getImage(const Nan::FunctionCallbackInfo<v8::Value>& info) {
+void IMObject::getImage(const Nan::FunctionCallbackInfo<v8::Value> &info)
+{
     v8::Local<v8::Context> context = info.GetIsolate()->GetCurrentContext();
-    IMObject* obj = ObjectWrap::Unwrap<IMObject>(info.Holder());
+    IMObject *obj = ObjectWrap::Unwrap<IMObject>(info.Holder());
     Magick::Blob dstBlob;
-    try {
-        obj->image.write( &dstBlob );
+    try
+    {
+        obj->image.write(&dstBlob, obj->context->format);
     }
-    catch (std::exception& err) {
+    catch (std::exception &err)
+    {
         printf("image.write failed with error");
         return;
     }
-    catch (...) {
+    catch (...)
+    {
         printf("unhandled error");
         return;
     }
