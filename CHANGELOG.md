@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-9](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/compare/v2.0.0-8...v2.0.0-9) (2021-12-28)
+
+
+### Features
+
+* **density:** set the image density ([3348aac](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/commit/3348aac85f4313d0867284a42cade10569a333c0))
+
 ## [2.0.0-8](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/compare/v2.0.0-7...v2.0.0-8) (2021-11-19)
 
 ## [2.0.0-7](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/compare/v2.0.0-6...v2.0.0-7) (2021-11-18)
