@@ -306,6 +306,9 @@ void IMObject::New(const Nan::FunctionCallbackInfo<v8::Value> &info)
         unsigned int threadResource = !threadResValue->IsUndefined() ? Nan::To<Uint32>(threadResValue).ToLocalChecked()->Value() : 1;
         MagickCore::SetMagickResourceLimit(MagickCore::ThreadResource, threadResource);
 
+        Local<Value> densityValue = Nan::Get(data, Nan::New<String>("density").ToLocalChecked()).ToLocalChecked();
+        obj->context->density = !densityValue->IsUndefined() ? Nan::To<Uint32>(densityValue).ToLocalChecked()->Value() : -1;
+
         Magick::Blob srcBlob(obj->context->srcData, obj->context->length);
 
         if (!ReadImageMagick(&obj->image, srcBlob, obj->context->srcFormat, obj->context))
@@ -383,6 +386,19 @@ void IMObject::getImage(const Nan::FunctionCallbackInfo<v8::Value> &info)
     v8::Local<v8::Context> context = info.GetIsolate()->GetCurrentContext();
     IMObject *obj = ObjectWrap::Unwrap<IMObject>(info.Holder());
     Magick::Blob dstBlob;
+    try
+    {
+        if (obj->context->density > 0)
+        {
+            obj->image.density(Magick::Geometry(obj->context->density, obj->context->density));
+        }
+    }
+    catch (std::exception &err)
+    {
+        printf("image.density failed with error");
+        return;
+    }
+
     try
     {
         obj->image.write(&dstBlob, obj->context->format);

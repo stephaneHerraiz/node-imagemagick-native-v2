@@ -2,7 +2,8 @@ const fs = require('fs');
 const im = require('./Release/imagemagick.node');
 export interface Options {
     srcData: Buffer,
-    threadResource?: number
+    threadResource?: number,
+    density?: number
 }
 
 export interface TextOptions {
@@ -32,7 +33,7 @@ export class ImageMagick {
         this.im = new im.IMObject(options);
     }
 
-    resize(options):Promise<void>  {
+    resize(options): Promise<void> {
         return new Promise((resolve, reject) => {
             this.im.resize(options, () => {
                 return resolve();
@@ -40,7 +41,7 @@ export class ImageMagick {
         });
     }
 
-    rotate(angle: number):Promise<void> {
+    rotate(angle: number): Promise<void> {
         return new Promise((resolve, reject) => {
             this.im.rotate(angle, () => {
                 return resolve();
@@ -49,7 +50,7 @@ export class ImageMagick {
     }
 
     drawRectangle(upperLeftX: number, upperLeftY: number
-        , lowerRightX: number, lowerRightY: number, options: DrawOptions):Promise<void>  {
+        , lowerRightX: number, lowerRightY: number, options: DrawOptions): Promise<void> {
         return new Promise((resolve, reject) => {
             this.im.drawRectangle(upperLeftX, upperLeftY, lowerRightX, lowerRightY, options, () => {
                 return resolve();
@@ -57,7 +58,7 @@ export class ImageMagick {
         });
     }
 
-    drawCircle(x: number, y: number, perimX: number, perimY: number, options: DrawOptions):Promise<void>  {
+    drawCircle(x: number, y: number, perimX: number, perimY: number, options: DrawOptions): Promise<void> {
         return new Promise((resolve, reject) => {
             this.im.drawCircle(x, y, perimX, perimY, options, () => {
                 return resolve();
@@ -65,7 +66,7 @@ export class ImageMagick {
         });
     }
 
-    drawText(x: number, y: number, text, options: TextOptions = {}):Promise<void> {
+    drawText(x: number, y: number, text, options: TextOptions = {}): Promise<void> {
         return new Promise((resolve, reject) => {
             this.im.drawText(x, y, text, options, () => {
                 return resolve();
@@ -73,10 +74,10 @@ export class ImageMagick {
         });
     }
 
-    getImageFile(path: string):Promise<void>  {
+    getImageFile(path: string): Promise<void> {
         return new Promise((resolve, reject) => {
             this.im.getImage((buf) => {
-                fs.writeFile(path,buf, (err) => {
+                fs.writeFile(path, buf, (err) => {
                     if (err) {
                         return reject(err);
                     } else {
@@ -86,7 +87,7 @@ export class ImageMagick {
             });
         });
     }
-    getImage():Promise<Buffer> {
+    getImage(): Promise<Buffer> {
         return new Promise((resolve, reject) => {
             this.im.getImage((buf) => {
                 resolve(buf);
