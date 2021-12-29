@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-10](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/compare/v2.0.0-9...v2.0.0-10) (2021-12-29)
+
+
+### Bug Fixes
+
+* **ts:** add format to option interface ([af91bd7](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/commit/af91bd72d4d80e02dd4a2d50a6d092d21c9ffd95))
+
 ## [2.0.0-9](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/compare/v2.0.0-8...v2.0.0-9) (2021-12-28)
 
 
