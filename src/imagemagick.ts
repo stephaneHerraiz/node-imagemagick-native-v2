@@ -27,6 +27,11 @@ export interface Stroke {
     opacity: number
 }
 
+export interface Size {
+    width: number,
+    height: number,
+}
+
 export class ImageMagick {
     private im: any;
 
@@ -92,6 +97,17 @@ export class ImageMagick {
         return new Promise((resolve, reject) => {
             this.im.getImage((buf) => {
                 resolve(buf);
+            });
+        });
+    }
+
+    getSize(): Promise<Size> {
+        return new Promise((resolve, reject) => {
+            const width = this.im.getWidth();
+            const height = this.im.getHeight();
+            resolve({
+                width: width,
+                height: height
             });
         });
     }

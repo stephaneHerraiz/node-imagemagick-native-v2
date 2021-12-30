@@ -267,6 +267,8 @@ void IMObject::Init(v8::Local<v8::Object> exports)
     Nan::SetPrototypeMethod(tpl, "rotate", rotate);
     Nan::SetPrototypeMethod(tpl, "getImage", getImage);
     Nan::SetPrototypeMethod(tpl, "baseColumns", baseColumns);
+    Nan::SetPrototypeMethod(tpl, "getHeight", getHeight);
+    Nan::SetPrototypeMethod(tpl, "getWidth", getWidth);
     Nan::SetPrototypeMethod(tpl, "drawRectangle", drawRectangle);
     Nan::SetPrototypeMethod(tpl, "drawCircle", drawCircle);
     Nan::SetPrototypeMethod(tpl, "drawText", drawText);
@@ -379,6 +381,20 @@ void IMObject::baseColumns(const Nan::FunctionCallbackInfo<v8::Value> &info)
     IMObject *obj = ObjectWrap::Unwrap<IMObject>(info.Holder());
     int col = static_cast<int>(obj->image.baseColumns());
     info.GetReturnValue().Set(Nan::New(col));
+}
+
+void IMObject::getWidth(const Nan::FunctionCallbackInfo<v8::Value> &info)
+{
+    IMObject *obj = ObjectWrap::Unwrap<IMObject>(info.Holder());
+    int col = static_cast<int>(obj->image.columns());
+    info.GetReturnValue().Set(Nan::New(col));
+}
+
+void IMObject::getHeight(const Nan::FunctionCallbackInfo<v8::Value> &info)
+{
+    IMObject *obj = ObjectWrap::Unwrap<IMObject>(info.Holder());
+    int rows = static_cast<int>(obj->image.rows());
+    info.GetReturnValue().Set(Nan::New(rows));
 }
 
 void IMObject::getImage(const Nan::FunctionCallbackInfo<v8::Value> &info)
