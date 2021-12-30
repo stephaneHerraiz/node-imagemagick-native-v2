@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-11](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/compare/v2.0.0-10...v2.0.0-11) (2021-12-30)
+
+
+### Features
+
+* new getSize fonction ([0e0ad15](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/commit/0e0ad15b5f3539b88e48ca997711da3034936b78))
+
 ## [2.0.0-10](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/compare/v2.0.0-9...v2.0.0-10) (2021-12-29)
 
 
