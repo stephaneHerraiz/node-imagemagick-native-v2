@@ -2,7 +2,7 @@ const fs = require('fs');
 const im = require('./Release/imagemagick.node');
 export interface Options {
     srcData: Buffer,
-    format: string,
+    format?: string,
     threadResource?: number,
     density?: number
 }

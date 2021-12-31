@@ -417,7 +417,14 @@ void IMObject::getImage(const Nan::FunctionCallbackInfo<v8::Value> &info)
 
     try
     {
-        obj->image.write(&dstBlob, obj->context->format);
+        if (obj->context->format.length() > 0)
+        {
+            obj->image.write(&dstBlob, obj->context->format);
+        }
+        else
+        {
+            obj->image.write(&dstBlob);
+        }
     }
     catch (std::exception &err)
     {
