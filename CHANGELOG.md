@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-14](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/compare/v2.0.0-13...v2.0.0-14) (2022-01-12)
+
+
+### Bug Fixes
+
+* add callback errors ([46eb361](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/commit/46eb361dbaa271f1cdca6c2227c798c8b40426f1))
+
 ## [2.0.0-13](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/compare/v2.0.0-12...v2.0.0-13) (2021-12-31)
 
 
