@@ -400,6 +400,8 @@ void IMObject::getHeight(const Nan::FunctionCallbackInfo<v8::Value> &info)
 void IMObject::getImage(const Nan::FunctionCallbackInfo<v8::Value> &info)
 {
     v8::Local<v8::Context> context = info.GetIsolate()->GetCurrentContext();
+    Isolate *isolate = info.GetIsolate();
+    Local<Function> cb = Local<Function>::Cast(info[0]);
     IMObject *obj = ObjectWrap::Unwrap<IMObject>(info.Holder());
     Magick::Blob dstBlob;
     try
@@ -409,9 +411,14 @@ void IMObject::getImage(const Nan::FunctionCallbackInfo<v8::Value> &info)
             obj->image.density(Magick::Geometry(obj->context->density, obj->context->density));
         }
     }
-    catch (std::exception &err)
+    catch (std::exception &error)
     {
-        printf("image.density failed with error");
+        std::string err = "getImage - image.density failed: ";
+        err += error.what();
+        Local<Value> argv[2];
+        argv[0] = Exception::Error(Nan::New<String>(err.c_str()).ToLocalChecked());
+        argv[1] = Nan::Undefined();
+        cb->Call(context, Null(isolate), 2, argv).ToLocalChecked();
         return;
     }
 
@@ -426,9 +433,14 @@ void IMObject::getImage(const Nan::FunctionCallbackInfo<v8::Value> &info)
             obj->image.write(&dstBlob);
         }
     }
-    catch (std::exception &err)
+    catch (std::exception &error)
     {
-        printf("image.write failed with error");
+        std::string err = "getImage - ";
+        err += error.what();
+        Local<Value> argv[2];
+        argv[0] = Exception::Error(Nan::New<String>(err.c_str()).ToLocalChecked());
+        argv[1] = Nan::Undefined();
+        cb->Call(context, Null(isolate), 2, argv).ToLocalChecked();
         return;
     }
     catch (...)
@@ -437,8 +449,6 @@ void IMObject::getImage(const Nan::FunctionCallbackInfo<v8::Value> &info)
         return;
     }
     Local<Value> argv[1] = {WrapPointer((char *)dstBlob.data(), dstBlob.length())};
-    Isolate *isolate = info.GetIsolate();
-    Local<Function> cb = Local<Function>::Cast(info[0]);
     cb->Call(context, Null(isolate), 1, argv).ToLocalChecked();
     // info.GetReturnValue().Set(WrapPointer((char *)dstBlob.data(), dstBlob.length()) );
 }
