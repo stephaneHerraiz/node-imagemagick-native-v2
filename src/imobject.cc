@@ -497,7 +497,7 @@ void IMObject::drawText(const Nan::FunctionCallbackInfo<v8::Value> &info)
     double x = info[0]->NumberValue(context).FromJust();
     double y = info[1]->NumberValue(context).FromJust();
 
-    v8::String::Utf8Value v8_text(isolate, info[2]->ToString());
+    v8::String::Utf8Value v8_text(isolate, info[2]->ToString(context).ToLocalChecked());
     std::string text(*v8_text);
 
     DrawTextOptions *options = DrawTextWorker::castOptions(Local<Object>::Cast(info[3]), isolate);

@@ -74,7 +74,10 @@ export class ImageMagick {
 
     drawText(x: number, y: number, text, options: TextOptions = {}): Promise<void> {
         return new Promise((resolve, reject) => {
-            this.im.drawText(x, y, text, options, () => {
+            this.im.drawText(x, y, text, options, (error) => {
+                if (error) {
+                    return reject(error);
+                }
                 return resolve();
             });
         });

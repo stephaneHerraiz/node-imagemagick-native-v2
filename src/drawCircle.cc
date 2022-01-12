@@ -44,6 +44,7 @@ void DrawCircleWorker::Execute()
 DrawCircleOptions *DrawCircleWorker::castOptions(Local<Object> options_, Isolate *isolate)
 {
     DrawCircleOptions *options = new DrawCircleOptions();
+    v8::Local<v8::Context> context = isolate->GetCurrentContext();
     if (options_->IsUndefined())
     {
         options->color = "black";
@@ -56,7 +57,7 @@ DrawCircleOptions *DrawCircleWorker::castOptions(Local<Object> options_, Isolate
     Local<Value> color = Nan::Get(options_, Nan::New<String>("color").ToLocalChecked()).ToLocalChecked();
     if (!color->IsUndefined())
     {
-        v8::String::Utf8Value v8_text(isolate, color->ToString());
+        v8::String::Utf8Value v8_text(isolate, color->ToString(context).ToLocalChecked());
         options->color = *v8_text;
     }
     else

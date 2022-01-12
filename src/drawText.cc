@@ -66,7 +66,7 @@ DrawTextOptions *DrawTextWorker::castOptions(Local<Object> options_, Isolate *is
     Local<Value> color = Nan::Get(options_, Nan::New<String>("color").ToLocalChecked()).ToLocalChecked();
     if (!color->IsUndefined())
     {
-        v8::String::Utf8Value v8_text(isolate, color->ToString());
+        v8::String::Utf8Value v8_text(isolate, color->ToString(context).ToLocalChecked());
         options->color = *v8_text;
     }
     else
@@ -91,7 +91,7 @@ DrawTextOptions *DrawTextWorker::castOptions(Local<Object> options_, Isolate *is
         Local<Value> fontFamily = Nan::Get(fontObj, Nan::New<String>("family").ToLocalChecked()).ToLocalChecked();
         if (!fontFamily->IsUndefined())
         {
-            v8::String::Utf8Value v8_text(isolate, fontFamily->ToString());
+            v8::String::Utf8Value v8_text(isolate, fontFamily->ToString(context).ToLocalChecked());
             options->font->family = *v8_text;
         }
         else

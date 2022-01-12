@@ -44,6 +44,7 @@ void DrawRectangleWorker::Execute()
 DrawRectangleOptions *DrawRectangleWorker::castOptions(Local<Object> options_, Isolate *isolate)
 {
     DrawRectangleOptions *options = new DrawRectangleOptions();
+    v8::Local<v8::Context> context = isolate->GetCurrentContext();
     if (options_->IsUndefined())
     {
         options->color = "black";
@@ -56,7 +57,7 @@ DrawRectangleOptions *DrawRectangleWorker::castOptions(Local<Object> options_, I
     Local<Value> color = Nan::Get(options_, Nan::New<String>("color").ToLocalChecked()).ToLocalChecked();
     if (!color->IsUndefined())
     {
-        v8::String::Utf8Value v8_text(isolate, color->ToString());
+        v8::String::Utf8Value v8_text(isolate, color->ToString(context).ToLocalChecked());
         options->color = *v8_text;
     }
     else
