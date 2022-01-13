@@ -41,7 +41,10 @@ export class ImageMagick {
 
     resize(options): Promise<void> {
         return new Promise((resolve, reject) => {
-            this.im.resize(options, () => {
+            this.im.resize(options, (error) => {
+                if (error) {
+                    return reject(error);
+                }
                 return resolve();
             });
         });
@@ -49,7 +52,10 @@ export class ImageMagick {
 
     rotate(angle: number): Promise<void> {
         return new Promise((resolve, reject) => {
-            this.im.rotate(angle, () => {
+            this.im.rotate(angle, (error) => {
+                if (error) {
+                    return reject(error);
+                }
                 return resolve();
             });
         });
@@ -58,7 +64,10 @@ export class ImageMagick {
     drawRectangle(upperLeftX: number, upperLeftY: number
         , lowerRightX: number, lowerRightY: number, options: DrawOptions): Promise<void> {
         return new Promise((resolve, reject) => {
-            this.im.drawRectangle(upperLeftX, upperLeftY, lowerRightX, lowerRightY, options, () => {
+            this.im.drawRectangle(upperLeftX, upperLeftY, lowerRightX, lowerRightY, options, (error) => {
+                if (error) {
+                    return reject(error);
+                }
                 return resolve();
             });
         });
@@ -66,7 +75,10 @@ export class ImageMagick {
 
     drawCircle(x: number, y: number, perimX: number, perimY: number, options: DrawOptions): Promise<void> {
         return new Promise((resolve, reject) => {
-            this.im.drawCircle(x, y, perimX, perimY, options, () => {
+            this.im.drawCircle(x, y, perimX, perimY, options, (error) => {
+                if (error) {
+                    return reject(error);
+                }
                 return resolve();
             });
         });
@@ -98,8 +110,12 @@ export class ImageMagick {
     }
     getImage(): Promise<Buffer> {
         return new Promise((resolve, reject) => {
-            this.im.getImage((buf) => {
-                resolve(buf);
+            this.im.getImage((buf, err) => {
+                if (err) {
+                    return reject(err);
+                } else {
+                    return resolve(buf);
+                }
             });
         });
     }
