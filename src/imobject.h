@@ -41,10 +41,12 @@ private:
   convert_im_ctx *context;
 
   static void New(const Nan::FunctionCallbackInfo<v8::Value> &info);
+  static bool readImage(Magick::Image *image, Magick::Blob srcBlob, std::string srcFormat);
   static void Getlen(const Nan::FunctionCallbackInfo<v8::Value> &info);
   static void rotate(const Nan::FunctionCallbackInfo<v8::Value> &info);
   static void resize(const Nan::FunctionCallbackInfo<v8::Value> &info);
   static void getImage(const Nan::FunctionCallbackInfo<v8::Value> &info);
+  static void compare(const Nan::FunctionCallbackInfo<v8::Value> &info);
   static void baseColumns(const Nan::FunctionCallbackInfo<v8::Value> &info);
   static void getWidth(const Nan::FunctionCallbackInfo<v8::Value> &info);
   static void getHeight(const Nan::FunctionCallbackInfo<v8::Value> &info);

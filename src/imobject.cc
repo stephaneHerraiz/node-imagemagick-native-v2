@@ -266,6 +266,7 @@ void IMObject::Init(v8::Local<v8::Object> exports)
     Nan::SetPrototypeMethod(tpl, "length", Getlen);
     Nan::SetPrototypeMethod(tpl, "rotate", rotate);
     Nan::SetPrototypeMethod(tpl, "getImage", getImage);
+    Nan::SetPrototypeMethod(tpl, "compare", compare);
     Nan::SetPrototypeMethod(tpl, "baseColumns", baseColumns);
     Nan::SetPrototypeMethod(tpl, "getHeight", getHeight);
     Nan::SetPrototypeMethod(tpl, "getWidth", getWidth);
@@ -330,6 +331,32 @@ void IMObject::New(const Nan::FunctionCallbackInfo<v8::Value> &info)
         info.GetReturnValue().Set(
             cons->NewInstance(context, argc, argv).ToLocalChecked());
     }
+}
+
+bool IMObject::readImage(Magick::Image *image, Magick::Blob srcBlob, std::string srcFormat)
+{
+    if (!srcFormat.empty())
+    {
+        image->magick(srcFormat.c_str());
+    }
+
+    try
+    {
+        image->read(srcBlob);
+    }
+    catch (std::exception &err)
+    {
+        std::string errorMessage = "readImage - ";
+        errorMessage += err.what();
+        throw std::runtime_error(errorMessage.c_str());
+        return false;
+    }
+    catch (...)
+    {
+        throw std::runtime_error("readImage - unhandled error");
+        return false;
+    }
+    return true;
 }
 
 void IMObject::Getlen(const Nan::FunctionCallbackInfo<v8::Value> &info)
@@ -451,6 +478,40 @@ void IMObject::getImage(const Nan::FunctionCallbackInfo<v8::Value> &info)
     Local<Value> argv[1] = {WrapPointer((char *)dstBlob.data(), dstBlob.length())};
     cb->Call(context, Null(isolate), 1, argv).ToLocalChecked();
     // info.GetReturnValue().Set(WrapPointer((char *)dstBlob.data(), dstBlob.length()) );
+}
+
+void IMObject::compare(const Nan::FunctionCallbackInfo<v8::Value> &info)
+{
+    v8::Local<v8::Context> context = info.GetIsolate()->GetCurrentContext();
+    Isolate *isolate = info.GetIsolate();
+    Local<Function> cb = Local<Function>::Cast(info[1]);
+
+    IMObject *obj = ObjectWrap::Unwrap<IMObject>(info.Holder());
+    Local<Object> data = Local<Object>::Cast(info[0]);
+    char *compareBuffer = Buffer::Data(data);
+
+    Magick::Blob srcBlob(compareBuffer, Buffer::Length(data));
+    Magick::Image compareImage;
+    try
+    {
+        obj->readImage(&compareImage, srcBlob, obj->context->srcFormat);
+    }
+    catch (std::exception &error)
+    {
+        std::string err = "compare - ";
+        err += error.what();
+        Local<Value> argv[2];
+        argv[0] = Nan::Undefined();
+        argv[1] = Exception::Error(Nan::New<String>(err.c_str()).ToLocalChecked());
+        cb->Call(context, Null(isolate), 2, argv).ToLocalChecked();
+        return;
+    }
+
+    bool result = obj->image.compare(compareImage);
+    Local<Value> argv[2];
+    argv[0] = Nan::New<Boolean>(result);
+    argv[1] = Nan::Undefined();
+    cb->Call(context, Null(isolate), 2, argv).ToLocalChecked();
 }
 
 void IMObject::drawRectangle(const Nan::FunctionCallbackInfo<v8::Value> &info)

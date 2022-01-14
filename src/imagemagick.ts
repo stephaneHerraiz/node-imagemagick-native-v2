@@ -120,6 +120,18 @@ export class ImageMagick {
         });
     }
 
+    compareImage(image: Buffer): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            this.im.compare(image, (result, err) => {
+                if (err) {
+                    return reject(err);
+                } else {
+                    return resolve(result);
+                }
+            });
+        });
+    }
+
     getSize(): Promise<Size> {
         return new Promise((resolve, reject) => {
             const width = this.im.getWidth();
