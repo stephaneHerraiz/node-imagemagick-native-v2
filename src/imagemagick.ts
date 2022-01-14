@@ -24,7 +24,7 @@ export interface DrawOptions {
 export interface Stroke {
     color: string,
     width: number,
-    opacity: number
+    opacity?: number
 }
 
 export interface Size {
