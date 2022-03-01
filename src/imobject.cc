@@ -314,11 +314,15 @@ void IMObject::New(const Nan::FunctionCallbackInfo<v8::Value> &info)
 
         Magick::Blob srcBlob(obj->context->srcData, obj->context->length);
 
-        if (!ReadImageMagick(&obj->image, srcBlob, obj->context->srcFormat, obj->context))
+        try
         {
-            printf(obj->context->error.c_str());
-            return;
+            obj->readImage(&obj->image, srcBlob, obj->context->srcFormat);
         }
+        catch (std::exception &error)
+        {
+           return Nan::ThrowError(Nan::New(error.what()).ToLocalChecked()); 
+        }
+
         obj->Wrap(info.This());
         info.GetReturnValue().Set(info.This());
     }

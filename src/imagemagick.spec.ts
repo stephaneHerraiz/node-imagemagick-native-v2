@@ -56,6 +56,34 @@ describe('Image info test', () => {
         });
     });
 });
+describe('Wrong source image tests', () => {
+    it('Broken source image test', async () => {
+        const srcData = await fs.promises.readFile('./test/broken.png');
+        const options = {
+            srcData: srcData,
+            format: 'PNG'
+        }
+        try {
+            new ImageMagick(options);
+        } catch(e) {
+            expect(e.message).toMatch(/Magick: no decode delegate for this image format/);
+        }
+    });
+
+    it('Empty source image test', async () => {
+        const srcData = await fs.promises.readFile('./test/empty.png');
+        const options = {
+            srcData: srcData,
+            format: 'PNG'
+        }
+        try {
+            new ImageMagick(options);
+        } catch(e) {
+            expect(e.message).toMatch(/Magick: zero-length blob not permitted/);
+        }
+    });
+});
+
 describe('Format JPEG image to PNG test', () => {
     it('convert JPEG to PNG test', async () => {
         const srcData = await fs.promises.readFile('./test/test.jpeg');

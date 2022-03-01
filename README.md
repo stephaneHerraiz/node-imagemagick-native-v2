@@ -2,8 +2,50 @@
 
 This a fork of [node-imagemagick-native](https://github.com/elad/node-imagemagick-native). This [Node](http://nodejs.org/) library provide an Object to run [ImageMagick](http://www.imagemagick.org/) multiple conversion function using [Magick++](http://www.imagemagick.org/Magick++/).
 
+![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+![Jest](https://img.shields.io/badge/jest.svg?style=for-the-badge&logo=typescript&logoColor=white)
+
 <a name='license'></a>
 
+## Install
+``` bash
+npm i imagemagick-native-v2
+```
+
+## Exemple
+``` typescript
+const { promises as fs } = require('fs');
+const { ImageMagick } = require('imagemagick-native-v2');
+
+const srcData = await fs.readFile('image.png');
+try {
+    const im = new ImageMagick({
+        srcData: srcData,
+        format: 'PNG'
+    });
+} catch (error) {
+        console.error('Cound not read source image: '+ error);
+        return;
+    }
+try {
+    await im.resize({
+        width: 320,
+        height: 240,
+        resizeStyle: 'aspectfit'
+    });
+
+    await im.drawText(10, 10, 'My fisrt text', {
+        color: 'red',
+        font: {
+            family: "DejaVu-Sans",
+            size: 10,
+        },
+    });
+    await im.getImageFile('result.png');
+} catch (error) {
+    console.error(`${error}`);
+}
+```
 ## License (MIT)
 
 Copyright (c) Stéphane Herraiz
