@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-16](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/compare/v2.0.0-15...v2.0.0-16) (2022-03-01)
+
+
+### Features
+
+* add image compare feature ([56d66d2](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/commit/56d66d27aeb9278488b3643450322ba830dffcff))
+* add ts reject error ([fc34ef2](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/commit/fc34ef262a2758a2e9fedf2d44ad030ae7e0ecac))
+
+
+### Bug Fixes
+
+* remove obsolete files ([1123c77](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/commit/1123c77063af90247bd335b4e166fbd00293a191))
+* strole opacity need to be optionnal ([2d7ff72](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/commit/2d7ff727fe38bae91dc1abfa7674a9ad74c7e4cd))
+* throw error when wrong source image ([3442a1e](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/commit/3442a1e03951a372d3b823653b8dacd523a0e301))
+
 ## [2.0.0-15](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/compare/v2.0.0-14...v2.0.0-15) (2022-01-12)
 
 
