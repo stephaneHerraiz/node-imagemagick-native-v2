@@ -22,6 +22,8 @@ jobs:
     steps:
     - name: Install dependencies
       run: sudo apt-get -y install imagemagick libmagick++-dev ghostscript node-gyp
+    - name: check imagemagick version
+      run: apt show imagemagick | grep Version | cut -d':' -f3 | cut -d'+' -f1 | sed 's/^/v/'
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v2
