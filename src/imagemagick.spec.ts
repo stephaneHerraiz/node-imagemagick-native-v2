@@ -1,5 +1,4 @@
 import { ImageMagick } from './index';
-import { mocked } from 'ts-jest/utils';
 import * as fs from 'fs';
 
 // here the whole foo var is mocked deeply
@@ -229,6 +228,7 @@ describe('Draw test', () => {
                 size: 10
             }
         });
+        await im.getImageFile('./test/results/result.png');
         const bufferResult = await im.getImage();
         const bufferTestResult = await fs.promises.readFile('./test/results/testresult-text.png');
         const res = await compareImage(bufferResult, bufferTestResult);
