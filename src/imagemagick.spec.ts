@@ -104,7 +104,6 @@ describe('Format JPEG image to PNG test', () => {
         }
         const im = new ImageMagick(options);
         await im.rotate(90);
-        await im.getImageFile('./test/result.png');
         const bufferTestResult = await fs.promises.readFile('./test/results/testresult-rotation.png');
         const res = await im.compareImage(bufferTestResult);
         expect(res).toBe(true);
@@ -225,10 +224,10 @@ describe('Draw test', () => {
         {
             font: {
                 family: 'arial',
-                size: 10
+                size: 20
             }
         });
-        await im.getImageFile('./test/results/result.png');
+        //await im.getImageFile('./test/results/testresult-text.png');
         const bufferResult = await im.getImage();
         const bufferTestResult = await fs.promises.readFile('./test/results/testresult-text.png');
         const res = await compareImage(bufferResult, bufferTestResult);
@@ -247,9 +246,10 @@ describe('Draw test', () => {
             color: 'red',
             font: {
                 family: 'arial',
-                size: 10
+                size: 20
             } 
         });
+        //await im.getImageFile('./test/results/testresult-textcolor.png');
         const bufferResult = await im.getImage();
         const bufferTestResult = await fs.promises.readFile('./test/results/testresult-textcolor.png');
         const res = await compareImage(bufferResult, bufferTestResult);
@@ -267,9 +267,10 @@ describe('Draw test', () => {
                 color: '#ff00ff',
                 font: {
                     family: 'arial',
-                    size: 10
+                    size: 20
                 }
         });
+        //await im.getImageFile('./test/results/testresult-texthexcolor.png');
         const bufferResult = await im.getImage();
         const bufferTestResult = await fs.promises.readFile('./test/results/testresult-texthexcolor.png');
         const res = await compareImage(bufferResult, bufferTestResult);
