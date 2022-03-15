@@ -36,9 +36,9 @@ jobs:
       run: npm run build
     - name: Run test
       run: npm run test
-      continue-on-error: "true"
+      continue-on-error: true
     - uses: actions/upload-artifact@v3
-        with:
-          name: "v2-build"
-          path: ./
+      with:
+        name: "v2-build"
+        path: ./
     
