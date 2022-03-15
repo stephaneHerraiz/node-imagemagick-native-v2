@@ -222,7 +222,13 @@ describe('Draw test', () => {
             format: 'PNG'
         }
         const im = new ImageMagick(options);
-        await im.drawText(20, 20, 'this a test');
+        await im.drawText(20, 20, 'this a test',
+        {
+            font: {
+                family: 'Helvetica',
+                size: 10
+            }
+        });
         const bufferResult = await im.getImage();
         const bufferTestResult = await fs.promises.readFile('./test/results/testresult-text.png');
         const res = await compareImage(bufferResult, bufferTestResult);
@@ -236,7 +242,14 @@ describe('Draw test', () => {
             format: 'PNG'
         }
         const im = new ImageMagick(options);
-        await im.drawText(20, 20, 'this a test', { color: 'red' });
+        await im.drawText(20, 20, 'this a test',
+        {
+            color: 'red',
+            font: {
+                family: 'Helvetica',
+                size: 10
+            } 
+        });
         const bufferResult = await im.getImage();
         const bufferTestResult = await fs.promises.readFile('./test/results/testresult-textcolor.png');
         const res = await compareImage(bufferResult, bufferTestResult);
@@ -249,27 +262,16 @@ describe('Draw test', () => {
             format: 'PNG'
         }
         const im = new ImageMagick(options);
-        await im.drawText(20, 20, 'this a test', { color: '#ff00ff' });
-        const bufferResult = await im.getImage();
-        const bufferTestResult = await fs.promises.readFile('./test/results/testresult-texthexcolor.png');
-        const res = await compareImage(bufferResult, bufferTestResult);
-        expect(res).toBe(true);
-    });
-    it('Draw text with font DejaVu-Sans and size 20 test', async () => {
-        const srcData = await fs.promises.readFile('./test/test.jpeg');
-        const options = {
-            srcData: srcData,
-            format: 'PNG'
-        }
-        const im = new ImageMagick(options);
-        await im.drawText(20, 20, 'this a test', {
-            font: {
-                family: 'DejaVu-Sans',
-                size: 20,
-            }
+        await im.drawText(20, 20, 'this a test',
+            {
+                color: '#ff00ff',
+                font: {
+                    family: 'Helvetica',
+                    size: 10
+                }
         });
         const bufferResult = await im.getImage();
-        const bufferTestResult = await fs.promises.readFile('./test/results/testresult-textfont.png');
+        const bufferTestResult = await fs.promises.readFile('./test/results/testresult-texthexcolor.png');
         const res = await compareImage(bufferResult, bufferTestResult);
         expect(res).toBe(true);
     });
