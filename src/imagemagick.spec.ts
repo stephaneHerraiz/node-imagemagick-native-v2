@@ -105,6 +105,7 @@ describe('Format JPEG image to PNG test', () => {
         }
         const im = new ImageMagick(options);
         await im.rotate(90);
+        await im.getImageFile('./test/result.png');
         const bufferTestResult = await fs.promises.readFile('./test/results/testresult-rotation.png');
         const res = await im.compareImage(bufferTestResult);
         expect(res).toBe(true);
