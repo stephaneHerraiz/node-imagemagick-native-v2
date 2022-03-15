@@ -12,7 +12,7 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
 
     strategy:
       matrix:
@@ -21,7 +21,9 @@ jobs:
 
     steps:
     - name: Install dependencies
-      run: sudo apt-get -y install imagemagick=6.9.7.4 libmagick++-dev=6.9.7.4 ghostscript node-gyp
+      run: |
+        apt-get update
+        apt-get -y install imagemagick libmagick++-dev ghostscript node-gyp
     - name: check imagemagick version
       run: apt show imagemagick | grep Version | cut -d':' -f3 | cut -d'+' -f1 | sed 's/^/v/'
     - uses: actions/checkout@v2
