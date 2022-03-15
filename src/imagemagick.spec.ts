@@ -224,7 +224,7 @@ describe('Draw test', () => {
         await im.drawText(20, 20, 'this a test',
         {
             font: {
-                family: 'Helvetica',
+                family: 'arial',
                 size: 10
             }
         });
@@ -246,7 +246,7 @@ describe('Draw test', () => {
         {
             color: 'red',
             font: {
-                family: 'Helvetica',
+                family: 'arial',
                 size: 10
             } 
         });
@@ -266,7 +266,7 @@ describe('Draw test', () => {
             {
                 color: '#ff00ff',
                 font: {
-                    family: 'Helvetica',
+                    family: 'arial',
                     size: 10
                 }
         });

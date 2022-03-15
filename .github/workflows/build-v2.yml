@@ -36,6 +36,10 @@ jobs:
       run: npm i
     - name: Build
       run: npm run build
+    - name: Install Arial font for test
+      run: |
+        mkdir -p /usr/share/fonts/truetype/windows
+        cp ./test/fonts/* /usr/share/fonts/truetype/windows/
     - name: Run test
       run: npm run test
       continue-on-error: true
