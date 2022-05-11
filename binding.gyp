@@ -1,12 +1,5 @@
 {
   'conditions': [
-    ['OS=="win"', {
-      'variables': {
-        'MAGICK_ROOT%': '<!(python get_regvalue.py)',
-        # download the dll binary and check off for libraries and includes
-        'OSX_VER%': "0",
-      }
-    }],
     ['OS=="mac"', {
       'variables': {
         # matches 10.9.X , 10.10 and outputs 10.9, 10.10, 10.11, 10.12, 10.13
@@ -36,6 +29,14 @@
       ],
       "conditions": [
         ['OS=="win"', {
+          "variables": {
+            "MAGICK_ROOT%": "<!(node magick++_env_root.js)",  
+            "conditions": [
+              ['"<!(node magick++_env_root.js)" == ""', {
+                "MAGICK_ROOT%": "C:\Program Files\ImageMagick-6.9.12-Q16-HDRI"
+              }]
+            ]
+          },
           "libraries": [
             '-l<(MAGICK_ROOT)/lib/CORE_RL_magick_.lib',
             '-l<(MAGICK_ROOT)/lib/CORE_RL_Magick++_.lib',
@@ -43,6 +44,16 @@
           ],
           'include_dirs': [
             '<(MAGICK_ROOT)/include',
+          ],
+          "copies": [
+            {
+              "destination": "<(module_root_dir)/build/Release",
+              "files": [
+                "<(MAGICK_ROOT)/lib/CORE_RL_magick_.lib",
+                "<(MAGICK_ROOT)/lib/CORE_RL_Magick++_.lib",
+                "<(MAGICK_ROOT)/lib/CORE_RL_wand_.lib"
+              ]
+            }
           ]
         }],
         ['OS=="win" and target_arch!="x64"', {

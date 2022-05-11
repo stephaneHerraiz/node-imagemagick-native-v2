@@ -1,6 +1,6 @@
 # node-imagemagick-native-v2
 
-This a fork of [node-imagemagick-native](https://github.com/elad/node-imagemagick-native). This [Node](http://nodejs.org/) library provide an Object to run [ImageMagick](http://www.imagemagick.org/) multiple conversion function using [Magick++](http://www.imagemagick.org/Magick++/).
+This a fork of [node-imagemagick-native](https://github.com/elad/node-imagemagick-native). This [Node](http://nodejs.org/) library provide a javascript object to run [ImageMagick](http://www.imagemagick.org/) multiple conversion functions using [Magick++](http://www.imagemagick.org/Magick++/).
 
 ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
 ![Jest](https://img.shields.io/badge/jest.svg?style=for-the-badge&logo=typescript&logoColor=white)
@@ -8,9 +8,32 @@ This a fork of [node-imagemagick-native](https://github.com/elad/node-imagemagic
 <a name='license'></a>
 
 ## Install
+### Install ImageMagick library on Linux
+``` bash
+sudo apt-get update
+sudo apt-get -y install \
+    imagemagick \
+    libmagick++-dev \
+    ghostscript
+```
+### Install ImageMagick library on Windows
+Install ImageMagick library:
+
+x64 : [ImageMagick-6.9.12-47-Q16-HDRI-x64-dll.exe](https://download.imagemagick.org/ImageMagick/download/binaries/ImageMagick-6.9.12-47-Q16-HDRI-x64-dll.exe)
+
+x86 : [ImageMagick-6.9.12-47-Q16-HDRI-x86-dll.exe](https://download.imagemagick.org/ImageMagick/download/binaries/ImageMagick-6.9.12-47-Q16-HDRI-x86-dll.exe)
+
+Set environment variables:
+``` bash
+setx MAGICK_ROOT "[ImageMagick library path]"
+setx MAGICK_CODER_MODULE_PATH "[ImageMagick library path]\modules\coders"
+```
+### Install package
 ``` bash
 npm i imagemagick-native-v2
 ```
+
+###
 
 ## Exemple
 ``` typescript

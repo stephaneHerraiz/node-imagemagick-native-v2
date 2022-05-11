@@ -6,6 +6,10 @@
 #include "imagemagick.h"
 #include <Magick++.h>
 
+#ifdef _WIN32
+  #include <stdexcept>
+#endif
+
 struct image_info
 {
   unsigned int maxMemory;

@@ -348,6 +348,41 @@ bool IMObject::readImage(Magick::Image *image, Magick::Blob srcBlob, std::string
     {
         image->read(srcBlob);
     }
+    catch( Magick::WarningCoder &warning )
+    {
+        // Process coder warning while loading file (e.g. TIFF warning)
+        // Maybe the user will be interested in these warnings (or not).
+        // If a warning is produced while loading an image, the image
+        // can normally still be used (but not if the warning was about
+        // something important!)
+        std::string warningMessage = "readImage - ";
+        warningMessage += warning.what();
+        throw std::runtime_error(warningMessage.c_str());
+        return false;
+    }
+    catch( Magick::Warning &warning )
+    {
+        // Handle any other Magick++ warning.
+        std::string warningMessage = "readImage - ";
+        warningMessage += warning.what();
+        throw std::runtime_error(warningMessage.c_str());
+        return false;
+    }
+    catch( Magick::ErrorFileOpen &err ) 
+    { 
+      // Process Magick++ file open error
+      std::string errorMessage = "readImage - ";
+        errorMessage += err.what();
+        throw std::runtime_error(errorMessage.c_str());
+        return false;
+    }
+    catch (Magick::Error &err)
+    {
+        std::string errorMessage = "readImage - ";
+        errorMessage += err.what();
+        throw std::runtime_error(errorMessage.c_str());
+        return false;
+    }
     catch (std::exception &err)
     {
         std::string errorMessage = "readImage - ";
