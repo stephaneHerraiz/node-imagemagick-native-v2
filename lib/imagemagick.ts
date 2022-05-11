@@ -1,5 +1,5 @@
 const fs = require('fs');
-const im = require('./Release/imagemagick.node');
+const im = require('bindings')('imagemagick');
 export interface Options {
     srcData: Buffer,
     format?: string,
