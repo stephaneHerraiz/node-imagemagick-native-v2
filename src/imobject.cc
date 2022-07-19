@@ -312,6 +312,10 @@ void IMObject::New(const Nan::FunctionCallbackInfo<v8::Value> &info)
         Local<Value> densityValue = Nan::Get(data, Nan::New<String>("density").ToLocalChecked()).ToLocalChecked();
         obj->context->density = !densityValue->IsUndefined() ? Nan::To<Uint32>(densityValue).ToLocalChecked()->Value() : -1;
 
+        Local<Value> debugValue = Nan::Get(data, Nan::New<String>("debug").ToLocalChecked()).ToLocalChecked();
+        bool debug = !debugValue->IsUndefined() ? Nan::To<Boolean>(debugValue).ToLocalChecked()->Value() : false;
+        obj->image.debug(debug);
+
         Magick::Blob srcBlob(obj->context->srcData, obj->context->length);
 
         try

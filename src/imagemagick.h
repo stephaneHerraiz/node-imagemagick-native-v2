@@ -35,7 +35,7 @@ struct identify_im_ctx : im_ctx_base {
 // Extra context for convert
 struct convert_im_ctx : im_ctx_base {
     unsigned int maxMemory;
-
+    bool debug;
     unsigned int width;
     unsigned int height;
     unsigned int xoffset;

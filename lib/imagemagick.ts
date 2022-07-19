@@ -4,7 +4,8 @@ export interface Options {
     srcData: Buffer,
     format?: string,
     threadResource?: number,
-    density?: number
+    density?: number,
+    debug?: boolean
 }
 
 export interface TextOptions {
