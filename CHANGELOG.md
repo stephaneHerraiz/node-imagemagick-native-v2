@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-18](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/compare/v2.0.0-17...v2.0.0-18) (2022-07-20)
+
+
+### Features
+
+* **getImage:** add strip option ([cd0fca6](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/commit/cd0fca63e6a01a135ac0509e93987c1b3bdaa64b))
+* **options:** add imageMagick debug mode ([3711c0c](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/commit/3711c0c249af2166d379d7c8a78d4a5262651249))
+
+
+### Bug Fixes
+
+* **getImage:** return density error in good order  ([9ea74e3](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/commit/9ea74e3beea02a9c313bb76390d6a211951a8a51))
+
 ## [2.0.0-17](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/compare/v2.0.0-16...v2.0.0-17) (2022-05-11)
 
 
