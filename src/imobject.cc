@@ -312,6 +312,9 @@ void IMObject::New(const Nan::FunctionCallbackInfo<v8::Value> &info)
         Local<Value> densityValue = Nan::Get(data, Nan::New<String>("density").ToLocalChecked()).ToLocalChecked();
         obj->context->density = !densityValue->IsUndefined() ? Nan::To<Uint32>(densityValue).ToLocalChecked()->Value() : -1;
 
+        Local<Value> stripValue = Nan::Get(data, Nan::New<String>("strip").ToLocalChecked()).ToLocalChecked();
+        obj->context->strip = !stripValue->IsUndefined() ? Nan::To<Boolean>(stripValue).ToLocalChecked()->Value() : false;
+
         Local<Value> debugValue = Nan::Get(data, Nan::New<String>("debug").ToLocalChecked()).ToLocalChecked();
         bool debug = !debugValue->IsUndefined() ? Nan::To<Boolean>(debugValue).ToLocalChecked()->Value() : false;
         obj->image.debug(debug);
@@ -494,28 +497,45 @@ void IMObject::getImage(const Nan::FunctionCallbackInfo<v8::Value> &info)
 
     try
     {
+        if (obj->context->strip == true) {
+            obj->image.strip(); 
+        }
         if (obj->context->format.length() > 0)
         {
             obj->image.write(&dstBlob, obj->context->format);
+            
         }
         else
         {
             obj->image.write(&dstBlob);
         }
     }
+    catch (Magick::Error &error)
+    {
+        std::string err = "getImage - ";
+        err += error.what();
+        Local<Value> argv[2];
+        argv[1] = Exception::Error(Nan::New<String>(err.c_str()).ToLocalChecked());
+        argv[0] = Nan::Undefined();
+        cb->Call(context, Null(isolate), 2, argv).ToLocalChecked();
+    }
     catch (std::exception &error)
     {
         std::string err = "getImage - ";
         err += error.what();
         Local<Value> argv[2];
-        argv[0] = Exception::Error(Nan::New<String>(err.c_str()).ToLocalChecked());
-        argv[1] = Nan::Undefined();
+        argv[1] = Exception::Error(Nan::New<String>(err.c_str()).ToLocalChecked());
+        argv[0] = Nan::Undefined();
         cb->Call(context, Null(isolate), 2, argv).ToLocalChecked();
         return;
     }
     catch (...)
     {
-        printf("unhandled error");
+        std::string err = "getImage - unhandled error";
+        Local<Value> argv[2];
+        argv[1] = Exception::Error(Nan::New<String>(err.c_str()).ToLocalChecked());
+        argv[0] = Nan::Undefined();
+        cb->Call(context, Null(isolate), 2, argv).ToLocalChecked();
         return;
     }
     Local<Value> argv[1] = {WrapPointer((char *)dstBlob.data(), dstBlob.length())};

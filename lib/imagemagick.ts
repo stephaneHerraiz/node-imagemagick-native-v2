@@ -1,11 +1,13 @@
 const fs = require('fs');
 const im = require('bindings')('imagemagick');
+
 export interface Options {
     srcData: Buffer,
     format?: string,
     threadResource?: number,
     density?: number,
-    debug?: boolean
+    debug?: boolean,
+    strip?: boolean
 }
 
 export interface TextOptions {
@@ -98,7 +100,10 @@ export class ImageMagick {
 
     getImageFile(path: string): Promise<void> {
         return new Promise((resolve, reject) => {
-            this.im.getImage((buf) => {
+            this.im.getImage((buf, err) => {
+                if (err) {
+                    return reject(err);
+                }
                 fs.writeFile(path, buf, (err) => {
                     if (err) {
                         return reject(err);
