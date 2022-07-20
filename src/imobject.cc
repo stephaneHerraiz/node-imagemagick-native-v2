@@ -489,8 +489,8 @@ void IMObject::getImage(const Nan::FunctionCallbackInfo<v8::Value> &info)
         std::string err = "getImage - image.density failed: ";
         err += error.what();
         Local<Value> argv[2];
-        argv[0] = Exception::Error(Nan::New<String>(err.c_str()).ToLocalChecked());
-        argv[1] = Nan::Undefined();
+        argv[1] = Exception::Error(Nan::New<String>(err.c_str()).ToLocalChecked());
+        argv[0] = Nan::Undefined();
         cb->Call(context, Null(isolate), 2, argv).ToLocalChecked();
         return;
     }
