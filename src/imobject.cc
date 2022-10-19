@@ -249,7 +249,9 @@ Nan::Persistent<v8::Function> IMObject::constructor;
 
 IMObject::IMObject() {}
 
-IMObject::~IMObject() {}
+IMObject::~IMObject() {
+    delete(this->context);
+}
 
 void IMObject::Init(v8::Local<v8::Object> exports)
 {
