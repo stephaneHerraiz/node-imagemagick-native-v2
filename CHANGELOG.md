@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-19](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/compare/v2.0.0-18...v2.0.0-19) (2022-10-19)
+
+
+### Bug Fixes
+
+* memory leak on the context object ([7a0ed04](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/commit/7a0ed04b114b911449f24e0edf4e4ad5d9a0b298))
+
 ## [2.0.0-18](https://github.com/stephaneHerraiz/node-imagemagick-native-v2/compare/v2.0.0-17...v2.0.0-18) (2022-07-20)
 
 
